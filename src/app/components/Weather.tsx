@@ -15,7 +15,7 @@ export default function Weather() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedCity, setSelectedCity] = useState(CITIES[0]);
-  const API_KEY = '5309e69dbbaf1da39e155616e1abc343';
+  const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 
   const fetchWeather = async () => {
     setLoading(true);
