@@ -26,11 +26,19 @@ export default function Weather() {
   const fetchWeather = async () => {
     setLoading(true);
     try {
-      // Muodostetaan API-kutsu valitulle kaupungille
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity},
-      FI&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&units=metric`;
+      // Tulostetaan API-avain (vain kehitystä varten)
+      console.log('API Key:', process.env.NEXT_PUBLIC_WEATHER_API_KEY?.slice(0, 5) + '...');
       
-      console.log('Fetching URL:', url);
+      // Muodostetaan API-kutsu valitulle kaupungille
+      const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+      const params = new URLSearchParams({
+        q: `${selectedCity},FI`,
+        appid: process.env.NEXT_PUBLIC_WEATHER_API_KEY || '',
+        units: 'metric'
+      });
+      
+      const url = `${baseUrl}?${params.toString()}`;
+      console.log('Request URL (without API key):', url.replace(process.env.NEXT_PUBLIC_WEATHER_API_KEY || '', 'API_KEY'));
 
       const response = await fetch(url);
       console.log('Response status:', response.status);
