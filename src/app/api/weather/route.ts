@@ -1,4 +1,4 @@
-import { HttpRequest } from "@azure/functions";
+import { NextResponse } from 'next/server';
 
 interface WeatherResponse {
     temperature: number;
@@ -24,28 +24,23 @@ interface OpenWeatherResponse {
     };
 }
 
-async function httpTrigger(
-    context: any, 
-    req: HttpRequest
-): Promise<void> {
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const city = searchParams.get('city') || 'Helsinki';
     const OPENWEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
-    const city = 'Helsinki';
-
-    context.log('API Key exists:', !!OPENWEATHER_API_KEY);
 
     if (!OPENWEATHER_API_KEY) {
-        context.res = {
-            status: 500,
-            body: { error: "API key not configured" }
-        };
-        return;
+        return NextResponse.json(
+            { error: "API key not configured" },
+            { status: 500 }
+        );
     }
 
     try {
         const response = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${OPENWEATHER_API_KEY}`
         );
-        
+
         if (!response.ok) {
             throw new Error(`Weather API responded with status ${response.status}`);
         }
@@ -61,20 +56,11 @@ async function httpTrigger(
             windSpeed: weatherData.wind.speed
         };
 
-        context.res = {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: weatherResponse
-        };
+        return NextResponse.json(weatherResponse);
     } catch (error) {
-        context.log.error('Error fetching weather data:', error);
-        context.res = {
-            status: 500,
-            body: { error: error instanceof Error ? error.message : "Failed to fetch weather data" }
-        };
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : "Failed to fetch weather data" },
+            { status: 500 }
+        );
     }
 }
-
-export default httpTrigger; 
