@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "lucide-react": "^0.464.0",
@@ -16,6 +15,7 @@
     "recharts": "^2.14.1"
   },
   "devDependencies": {
+    "@azure/functions": "^4.6.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
