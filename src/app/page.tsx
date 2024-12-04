@@ -2,8 +2,18 @@
 
 import { useState } from 'react';
 
+// Määritellään WeatherData tyyppi
+interface WeatherData {
+    temperature: number;
+    condition: string;
+    location: string;
+    description: string;
+    humidity: number;
+    windSpeed: number;
+}
+
 export default function Home() {
-    const [weather, setWeather] = useState<any>(null);
+    const [weather, setWeather] = useState<WeatherData | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,9 +30,9 @@ export default function Home() {
             
             const data = await response.json();
             setWeather(data);
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error:', error);
-            setError(error.message);
+            setError(error instanceof Error ? error.message : 'An error occurred');
         } finally {
             setLoading(false);
         }
