@@ -1,6 +1,16 @@
 module.exports = async function (context, req) {
     const OPENWEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
-    const city = 'Helsinki'; // Voit muuttaa tämän tai ottaa parametrina
+    const city = 'Helsinki';
+
+    context.log('API Key exists:', !!OPENWEATHER_API_KEY);
+
+    if (!OPENWEATHER_API_KEY) {
+        context.res = {
+            status: 500,
+            body: { error: "API key not configured" }
+        };
+        return;
+    }
 
     try {
         const response = await fetch(
@@ -8,7 +18,7 @@ module.exports = async function (context, req) {
         );
         
         if (!response.ok) {
-            throw new Error('Weather API call failed');
+            throw new Error(`Weather API responded with status ${response.status}`);
         }
 
         const weatherData = await response.json();
@@ -31,7 +41,7 @@ module.exports = async function (context, req) {
         context.log.error('Error fetching weather data:', error);
         context.res = {
             status: 500,
-            body: { error: "Failed to fetch weather data" }
+            body: { error: error.message || "Failed to fetch weather data" }
         };
     }
 }; 
