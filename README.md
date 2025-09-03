@@ -19,7 +19,7 @@ A modern weather application built with Next.js, TypeScript, and Tailwind CSS. G
 ---
 
 ### Screenshots
-<div align="center">
+<div>
   <img src="./docs/images/screenshot1.png" alt="Main UI" width="600"/>
 
 ---
